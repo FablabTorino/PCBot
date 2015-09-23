@@ -60,4 +60,4 @@ def printImageByUrl (url):
 	printer.printImage(Image.open(newName))
 
 	#add some empty lines
-	printer.feed(3
+	printer.feed(3)
