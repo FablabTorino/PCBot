@@ -131,7 +131,12 @@ def echo():
                         return
                     elif '/help' in message:
                         print 'attaccati al tram'
-                        #print_breadboard(message)
+                        bot.sendMessage(chat_id=chat_id, text="Please help me! I'm stuck here! It's a me, Mario!")
+                        LAST_UPDATE_ID = update.update_id
+                        return
+                    else :
+                        print 'default'
+                        bot.sendMessage(chat_id=chat_id, text="What is "+message+"?")
                         LAST_UPDATE_ID = update.update_id
                         return
                 if 'Giancarlo' in from_user['first_name']:
@@ -245,8 +250,9 @@ def weather_info():
     message=message+"\n temperatura massima: "+maxtemp+"C"
     message=message+"\n temperatura minima: "+mintemp+"C"
     bot.sendMessage(chat_id=AUGChatId, text=message)
-    
 
+#--------------------------------#
+#lists available boards from a json file 
 def breadboards_list(chat_id):
     filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/printable.json')
     print filename
@@ -260,9 +266,9 @@ def breadboards_list(chat_id):
 
     os.remove(filename)
     
-    
+#--------------------------------#
+#prints images with the thermal printer
 def print_breadboard(message, chat_id):
-    bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
 
     filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/printable.json')
     with open(filename) as jsonFile :
@@ -273,9 +279,14 @@ def print_breadboard(message, chat_id):
     for i in data['breadboard'] :
         if i['name'] in message :
             print i['filename']
+            os.remove(i['filename'])
             filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/'+i['filename'])
+            bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
             #os.remove(filename)
-
+            return
+    bot.sendMessage(chat_id=chat_id, text="Sorry there's no board named "+message)
+#--------------------------------#
+#main loop - listens for commands.
 
 if __name__ == '__main__':
     while True:
