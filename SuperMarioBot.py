@@ -279,7 +279,7 @@ def print_breadboard(message, chat_id):
     for i in data['breadboard'] :
         if i['name'] in message :
             print i['filename']
-            os.remove(i['filename'])
+            #os.remove(i['filename'])
             filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/'+i['filename'])
             bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
             #os.remove(filename)
