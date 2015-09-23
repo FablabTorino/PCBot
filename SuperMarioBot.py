@@ -14,6 +14,8 @@ import wget
 import os
 import json
 
+import printer
+
 # Telegram Bot Authorization Token
 # SuperMario_bot
 bot = telegram.Bot('134502559:AAEitHOxBS0Kz5IdLobu9iD-40OB20gDKwA')
@@ -21,7 +23,8 @@ bot = telegram.Bot('134502559:AAEitHOxBS0Kz5IdLobu9iD-40OB20gDKwA')
 #AUGChatId=str(-26538515)
 AUGChatId=str(-6549559)
 
-
+DataUrl="https://raw.githubusercontent.com/FablabTorino/PCBot/master/data/printable.json"
+GFXUrl="https://raw.githubusercontent.com/FablabTorino/PCBot/master/gfx/"
 
 # This will be our global variable to keep the latest update_id when requesting
 # for updates. It starts with the latest update_id if available.
@@ -254,7 +257,7 @@ def weather_info():
 #--------------------------------#
 #lists available boards from a json file 
 def breadboards_list(chat_id):
-    filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/printable.json')
+    filename=wget.download(DataUrl)
     print filename
 
     from pprint import pprint
@@ -270,7 +273,7 @@ def breadboards_list(chat_id):
 #prints images with the thermal printer
 def print_breadboard(message, chat_id):
 
-    filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/printable.json')
+    filename=wget.download(DataUrl)
     with open(filename) as jsonFile :
         data = json.load(jsonFile)
 
@@ -280,7 +283,7 @@ def print_breadboard(message, chat_id):
         if i['name'] in message :
             print i['filename']
             #os.remove(i['filename'])
-            filename=wget.download('https://raw.githubusercontent.com/Gianbacchio/Fablab_assistant/master/Breadboards/'+i['filename'])
+            filename=wget.download(GFXUrl+i['filename'])
             bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
             #os.remove(filename)
             return
