@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 
-''' This is the Offiacial Bot of AUG Torino Team ''' 
+''' This Bot prints breadboards layout on a thermal printer '''
 
 import telegram
 import time
@@ -15,10 +15,11 @@ import os
 import json
 
 import printer
+import privateData
 
 # Telegram Bot Authorization Token
 # SuperMario_bot
-bot = telegram.Bot('134502559:AAEitHOxBS0Kz5IdLobu9iD-40OB20gDKwA')
+bot = telegram.Bot(token)
 #AUGChatId=str(-22985187)
 #AUGChatId=str(-26538515)
 AUGChatId=str(-6549559)
@@ -194,7 +195,7 @@ def AUGCalendar():
     fifth_week = c[4]
 
     # If there is a WEDNESDAY in the first week, the second WEDNESDAY
-    # is in the second week.  Otherwise the second Thursday must 
+    # is in the second week.  Otherwise the second Thursday must
     # be in the third week.
     if first_week[calendar.WEDNESDAY]:
         Ameeting_date = second_week[calendar.WEDNESDAY]
@@ -255,7 +256,7 @@ def weather_info():
     bot.sendMessage(chat_id=AUGChatId, text=message)
 
 #--------------------------------#
-#lists available boards from a json file 
+#lists available boards from a json file
 def breadboards_list(chat_id):
     filename=wget.download(DataUrl)
     print filename
@@ -268,7 +269,7 @@ def breadboards_list(chat_id):
         bot.sendMessage(chat_id=chat_id, text="/breadboard_"+i['name'])
 
     os.remove(filename)
-    
+
 #--------------------------------#
 #prints images with the thermal printer
 def print_breadboard(message, chat_id):
@@ -295,5 +296,3 @@ if __name__ == '__main__':
     while True:
         echo()
         time.sleep(3)
-
-
