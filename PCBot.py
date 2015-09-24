@@ -43,8 +43,6 @@ import re
 import random
 
 
-
-
 def echo():
     global LAST_UPDATE_ID
     # Request updates from last updated_id
@@ -75,8 +73,8 @@ def echo():
                     elif '/breadboard_' in message:
                         message=message.replace("/breadboard_","")
                         #print message
-                        print_breadboard(message, chat_id)
                         LAST_UPDATE_ID = update.update_id
+                        print_breadboard(message, chat_id)
                         return
                     elif '/help' in message: #please fix this
                         print 'attaccati al tram'
@@ -170,7 +168,6 @@ def print_breadboard(message, chat_id):
         if i['name'] in message :
             print i['filename']
             #os.remove(i['filename'])
-
             filename='tempdata/'+i['filename']
             url=GFXUrl+i['filename']
             urllib.urlretrieve(url, filename)
