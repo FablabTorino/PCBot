@@ -1,4 +1,11 @@
-edison=False
+import platform
+if 'edison' in platform.platform():
+	edison=True
+	print("I'm running on a edison")
+else:
+	edison=False
+	print("I'm not running on a edison")
+
 
 if edison==True:
 	import mraa
