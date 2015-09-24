@@ -17,7 +17,6 @@
 						{"name":"edison","filename":"edison.png"},
 						{"name":"esp826_12e","filename":"esp8266-esp-12e.jpg"},
 						{"name":"esp826","filename":"esp8266.jpg"}
-
 				],
 				"Transistors":[
 						{"name":"IRF520","filename":"IRF520.png"}
