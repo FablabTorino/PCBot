@@ -7,7 +7,6 @@ import telegram
 import time
 import calendar
 import datetime
-from conversation import *
 import string
 import json
 import urllib
@@ -62,29 +61,25 @@ def echo():
                 print(from_user)
                 if (message):
                     #this stuff is not core of the printing breadboard layout stuff... just as reference
-                    if '\AUGcalendar' in message:
-                        AUGCalendar()
-                        LAST_UPDATE_ID = update.update_id
+                    LAST_UPDATE_ID = update.update_id
+                    if '/AUGcalendar' in message:
+                        AUGCalendar(chat_id)
                         return
                     elif '/breadboards_list' in message:
                         breadboards_list(chat_id)
-                        LAST_UPDATE_ID = update.update_id
                         return
                     elif '/breadboard_' in message:
                         message=message.replace("/breadboard_","")
                         #print message
-                        LAST_UPDATE_ID = update.update_id
                         print_breadboard(message, chat_id)
                         return
                     elif '/help' in message: #please fix this
                         print 'attaccati al tram'
                         bot.sendMessage(chat_id=chat_id, text="Please help me! I'm stuck here! It's a me, Mario!")
-                        LAST_UPDATE_ID = update.update_id
                         return
                     else :
                         print 'default'
-                        bot.sendMessage(chat_id=chat_id, text="What is "+message+"?")
-                        LAST_UPDATE_ID = update.update_id
+                        #bot.sendMessage(chat_id=chat_id, text="What is "+message+"?")
                         return
 
                 if (message):
@@ -97,7 +92,7 @@ def echo():
         pass
 
 
-def AUGCalendar():
+def AUGCalendar(chat_id):
     # Compute the dates for each week that overlaps the month
     now = datetime.datetime.now()
     print str(now)
@@ -120,7 +115,11 @@ def AUGCalendar():
         Ameeting_date = third_week[calendar.WEDNESDAY]
         Bmeeting_date = fifth_week[calendar.WEDNESDAY]
     message='Gli appuntamenti di AUG di questo mese sono:\n Mercoledì %2s e Mercoledì %2s' % (Ameeting_date, Bmeeting_date)
-    bot.sendMessage(chat_id=AUGChatId, text=message)
+
+    print (message)
+
+    bot.sendMessage(chat_id=chat_id, text=message)
+
     c = calendar.TextCalendar(calendar.SUNDAY)
     calen=c.formatmonth(year,month)
     calen=calen.replace("  ", "   ")
@@ -157,7 +156,7 @@ def print_breadboard(message, chat_id):
 
     #filename=wget.download(DataUrl)
 
-    filename='tempdata/data.json'
+    filename='tempData/data.json'
     urllib.urlretrieve(DataUrl, filename)
 
     with open(filename) as jsonFile :
@@ -168,13 +167,14 @@ def print_breadboard(message, chat_id):
         if i['name'] in message :
             print i['filename']
             #os.remove(i['filename'])
-            filename='tempdata/'+i['filename']
+            filename='tempData/'+i['filename']
             url=GFXUrl+i['filename']
             urllib.urlretrieve(url, filename)
 
             bot.sendPhoto(chat_id=chat_id, photo=url)
 
             #filename=wget.download(GFXUrl+i['filename'])
+            printer.printImageByUrl(url)
             bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
             #os.remove(filename)
             return
