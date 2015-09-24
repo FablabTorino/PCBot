@@ -1,7 +1,7 @@
 {
 	"breadboard":[
 				   {"name":"blink","filename":"blink.png"},
-				   {"name":"analog-In","filename":"analogIn.png"},
+				   {"name":"analogIn","filename":"analogIn.png"},
 				   {"name":"button","filename":"button.png"}
 				],
 	"pinout":[
