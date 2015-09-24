@@ -14,6 +14,9 @@ import urllib
 import printer
 import privateData
 
+from pprint import pprint
+
+
 # Telegram Bot Authorization Token
 # SuperMario_bot
 bot = telegram.Bot(privateData.token)
@@ -142,9 +145,11 @@ def breadboards_list(chat_id):
 
     print filename
 
-    from pprint import pprint
     with open(filename) as jsonFile :
         data = json.load(jsonFile)
+    pprint(data)
+    print (data)
+
     for i in data['breadboard'] :
         print i['name']
         bot.sendMessage(chat_id=chat_id, text="/breadboard_"+i['name'])
