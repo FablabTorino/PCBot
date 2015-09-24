@@ -175,6 +175,8 @@ def print_breadboard(message, chat_id):
             url=GFXUrl+i['filename']
             urllib.urlretrieve(url, filename)
 
+            bot.sendPhoto(chat_id=chat_id, photo=url)
+
             #filename=wget.download(GFXUrl+i['filename'])
             bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
             #os.remove(filename)
