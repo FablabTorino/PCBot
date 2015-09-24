@@ -1,4 +1,8 @@
-#import mraa
+edison=False
+
+if edison==True:
+	import mraa
+
 import urllib
 from urlparse import urlparse
 from os.path import splitext
@@ -12,21 +16,22 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = False
 
 #open the serial port on TX RX on the edison
-
-x=mraa.Uart(0)
+if edison==True:
+	x=mraa.Uart(0)
 
 #Instantiate the pronter
-printer = Adafruit_Thermal("/dev/ttyMFD1", 19200, timeout=5)
+if edison==True:
+	printer = Adafruit_Thermal("/dev/ttyMFD1", 19200, timeout=5)
 
 
 def printImageByUrl (url):
-	
+
 	urlpath=urlparse(url)
 	root, ext = splitext(urlpath.path)
 	print root
 	print ext
 
-	
+
 	filename='./gfx/printfile'+ext
 	urllib.urlretrieve(url, filename)
 
@@ -37,14 +42,14 @@ def printImageByUrl (url):
 	# Open the image file.
 	try:
 	    im =  Image.open(filename)
-	  
+
 	except:
 	    print "Unable to load image"
   	# Calculate the height using the same aspect ratio
 	widthPercent = (baseWidth / float(im.size[0]))
 	height = int((float(im.size[1]) * float(widthPercent)))
 	size = (baseWidth, height)
-	
+
 	try:
 	    im.load()
 	except IOError:
