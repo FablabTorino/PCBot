@@ -2,11 +2,11 @@
 	"breadboard":[
 				   {"name":"blink","filename":"stocazzo.png"},
 				   {"name":"analog","filename":"staminchia.png"},						
-				   {"name":"cacca","filename":"stacacata.com"}
+				   {"name":"cacca","filename":"stacacata.png"}
 				],
 	"pinout":[
 				{"name":"blink","filename":"sticazzi.png"},
-				{"name":"analog","filename":"staminchia.png"},						
+				{"name":"analog","filename":"staminchia.png"},
 				{"name":"cacca","filename":"stapopo.png"}
 			 ]
 }
