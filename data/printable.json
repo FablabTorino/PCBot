@@ -5,8 +5,16 @@
 				   {"name":"button","filename":"button.png"}
 				],
 	"pinout":[
-				{"name":"blink","filename":"sticazzi.png"},
-				{"name":"analog","filename":"staminchia.png"},
-				{"name":"cacca","filename":"stapopo.png"}
+				{"name":"555","filename":"555.jpg.png", "category":"ICs"},
+				{"name":"Atmega328","filename":"Atmega328.png","category":"Microcontrollers"},
+				{"name":"ATtiny45-85","filename":"ATtiny45-85.png","category":"Microcontrollers"}
+				{"name":"edison","filename":"edison.png","category":"Microcontrollers"}
+				{"name":"esp826_12e","filename":"esp8266-esp-12e.jpg","category":"Microcontrollers"}
+				{"name":"esp826","filename":"esp8266.jpg","category":"Microcontrollers"}
+				{"name":"IRF520","filename":"IRF520.png","category":"Transistors"}
+				{"name":"L293","filename":"l292.png","category":"ICs"}
+				{"name":"TLC5940","filename":"TLC5940.png","category":"ICs"}
+				{"name":"ULN2803","filename":"ULN2803.jpg","category":"ICs"}
+
 			 ]
 }
