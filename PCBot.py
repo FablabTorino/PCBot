@@ -48,12 +48,16 @@ import random
 def echo():
     global LAST_UPDATE_ID
     # Request updates from last updated_id
+
     try:
         for update in bot.getUpdates(offset=LAST_UPDATE_ID):
+
             if LAST_UPDATE_ID < update.update_id:
                 # chat_id is required to reply any message
                 chat_id = update.message.chat_id
                 from_user = update.message.from_user
+
+
                 if update.message.text!=None:
                     # message = update.message.text.encode('utf-8')
                     message = update.message.text
@@ -75,6 +79,17 @@ def echo():
                         message=message.replace("/breadboard_","")
                         #print message
                         print_breadboard(message, chat_id)
+                        return
+
+                    elif '/print' in message:
+                        message=message.replace("/print ","")
+                        #print message
+                        imageTypes = ['.jpg', '.png', '.jpg']
+                        if any(x in message for x in imageTypes):
+                            print ("I'm printin an image")
+                            printer.printImageByUrl(message)
+                        else:
+                            print ("this is not an image")
                         return
                     elif '/help' in message: #please fix this
                         print 'attaccati al tram'
