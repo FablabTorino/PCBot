@@ -18,14 +18,32 @@ from pprint import pprint
 
 
 # Telegram Bot Authorization Token
-# SuperMario_bot
+# PCBot
 bot = telegram.Bot(privateData.token)
-#AUGChatId=str(-22985187)
-#AUGChatId=str(-26538515)
+LAST_UPDATE_ID = None
 AUGChatId=str(-6549559)
 
 DataUrl="https://raw.githubusercontent.com/FablabTorino/PCBot/master/data/printable.json"
 GFXUrl="https://raw.githubusercontent.com/FablabTorino/PCBot/master/gfx/"
+
+
+class BotCommand:
+    command = None
+    parameter = None
+
+    def __init__(self, message):
+        self.parameter = ""
+        cmdSeparator = message.find('_')
+        if cmdSeparator != -1:
+            self.command = message[:cmdSeparator].strip()
+            self.parameter = message[cmdSeparator+1:].strip()
+        else:
+            parts = message.split(' ')
+            self.command = parts[0].strip()
+            if len(parts) > 1:
+                print self.parameter
+                self.parameter = parts[1].strip()
+
 
 # This will be our global variable to keep the latest update_id when requesting
 # for updates. It starts with the latest update_id if available.
@@ -39,60 +57,9 @@ except IndexError:
    # reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
    # bot.sendMessage(chat_id=chat_id, text="Stay here, I'll be back.", reply_markup=reply_markup)
 
-
-import string
 import re
 import random
 
-
-def echo():
-    global LAST_UPDATE_ID
-    # Request updates from last updated_id
-    try:
-        for update in bot.getUpdates(offset=LAST_UPDATE_ID):
-            if LAST_UPDATE_ID < update.update_id:
-                # chat_id is required to reply any message
-                chat_id = update.message.chat_id
-                from_user = update.message.from_user
-                if update.message.text!=None:
-                    # message = update.message.text.encode('utf-8')
-                    message = update.message.text
-                    message = message.encode('utf-8')
-                    #print message here
-                    print(message)
-                else: message=None
-                print(from_user)
-                if (message):
-                    #this stuff is not core of the printing breadboard layout stuff... just as reference
-                    LAST_UPDATE_ID = update.update_id
-                    if '/AUGcalendar' in message:
-                        AUGCalendar(chat_id)
-                        return
-                    elif '/breadboards_list' in message:
-                        breadboards_list(chat_id)
-                        return
-                    elif '/breadboard_' in message:
-                        message=message.replace("/breadboard_","")
-                        #print message
-                        print_breadboard(message, chat_id)
-                        return
-                    elif '/help' in message: #please fix this
-                        print 'attaccati al tram'
-                        bot.sendMessage(chat_id=chat_id, text="Please help me! I'm stuck here! It's a me, Mario!")
-                        return
-                    else :
-                        print 'default'
-                        #bot.sendMessage(chat_id=chat_id, text="What is "+message+"?")
-                        return
-
-                if (message):
-                    if '#print' in message:
-                        bot.sendMessage(chat_id=chat_id, text=message)
-                        #bot.sendMessage(chat_id=chat_id, text=therapist.respond(message))
-                        LAST_UPDATE_ID = update.update_id
-                LAST_UPDATE_ID = update.update_id
-    except:
-        pass
 
 
 def AUGCalendar(chat_id):
@@ -137,57 +104,146 @@ def AUGCalendar(chat_id):
 
 
 #--------------------------------#
-#lists available boards from a json file
-def breadboards_list(chat_id):
-
+#prints images with the thermal printer
+def print_breadboard(chat_id, botCmd):
     filename='tempData/data.json'
-    urllib.urlretrieve(DataUrl, filename)
-
-    print filename
+    urllib.urlretrieve(DataUrl  , filename)
 
     with open(filename) as jsonFile :
         data = json.load(jsonFile)
-    pprint(data)
-    print (data)
 
-    for i in data['breadboard'] :
-        print i['name']
-        bot.sendMessage(chat_id=chat_id, text="/breadboard_"+i['name'])
+    if botCmd.parameter == "list":
+        breadboardList = (bread["name"] for bread in data['breadboard'])
+        bot.sendMessage(chat_id=chat_id, text='\n'.join(map('/breadboard_{0}'.format, breadboardList)))
+        return
+
+    results = {}
+    for bread in data['breadboard']:
+        if botCmd.parameter in bread["name"]:
+            results.update({bread["name"] : bread["filename"]})
+
+    if len(results) == 1:   
+        #bot.sendMessage(chat_id=chat_id, text=results.keys()[0])
+        #print results.values()[0]
+        filename='tempData/' + results.values()[0]
+        url=GFXUrl+results.values()[0]
+        urllib.urlretrieve(url, filename)
+
+        bot.sendPhoto(chat_id=chat_id, photo=url)
+        printer.printImageByUrl(url)
+        bot.sendMessage(chat_id=chat_id, text="ok, printing " + botCmd.parameter)
+    elif len(results) > 1:
+        items = "Sono stati trovati {0} risultati\n".format(len(results))
+        items += ('\n'.join(map('/breadboard_{0}'.format, results.keys())))
+        bot.sendMessage(chat_id=chat_id, text=items)
+    else:
+        bot.sendMessage(chat_id=chat_id, text="Nessun risultato per " + botCmd.parameter)
 
 
 #--------------------------------#
-#prints images with the thermal printer
-def print_breadboard(message, chat_id):
+# print pinouts from the thermal printer
 
-    #filename=wget.download(DataUrl)
-
-    filename='tempData/data.json'
-    urllib.urlretrieve(DataUrl, filename)
+def print_pinout(chat_id, botCmd):
+    #filename='tempData/data.json'
+    filename='data/printable.json'
+    #urllib.urlretrieve(DataUrl, filename)
 
     with open(filename) as jsonFile :
         data = json.load(jsonFile)
 
+    results = {}
+    categories = data['pinout'].items()
+    for category in categories:
+        #print 'category name' + category[0]
+        for item in category[1]:
+            if botCmd.parameter in item['name']:
+                results.update({item['name'] : item['filename']})
+    print results
 
-    for i in data['breadboard'] :
-        if i['name'] in message :
-            print i['filename']
-            #os.remove(i['filename'])
-            filename='tempData/'+i['filename']
-            url=GFXUrl+i['filename']
-            urllib.urlretrieve(url, filename)
+    if len(results) == 1:   
+        #bot.sendMessage(chat_id=chat_id, text=results.keys()[0])
+        #print results.values()[0]
+        filename='tempData/' + results.values()[0]
+        url=GFXUrl+results.values()[0]
+        urllib.urlretrieve(url, filename)
 
-            bot.sendPhoto(chat_id=chat_id, photo=url)
+        bot.sendPhoto(chat_id=chat_id, photo=url)
+        printer.printImageByUrl(url)
+        bot.sendMessage(chat_id=chat_id, text="ok, printing " + botCmd.parameter)
+    elif len(results) > 1:
+        items = "Sono stati trovati {0} risultati\n".format(len(results))
+        items += ('\n'.join(map('/pinout_{0}'.format, results.keys())))
+        bot.sendMessage(chat_id=chat_id, text=items)
+    else:
+        bot.sendMessage(chat_id=chat_id, text="Nessun risultato per " + botCmd.parameter)
 
-            #filename=wget.download(GFXUrl+i['filename'])
-            printer.printImageByUrl(url)
-            bot.sendMessage(chat_id=chat_id, text="ok, printing "+message)
-            #os.remove(filename)
-            return
-    bot.sendMessage(chat_id=chat_id, text="Sorry there's no board named "+message)
+
+    if botCmd.parameter == "list":
+        ICList = (pinout["name"] for pinout in data['pinout']['ICs'])
+        MicroList = (pinout["name"] for pinout in data['pinout']['Microcontrollers'])
+        TransistorsList = (pinout["name"] for pinout in data['pinout']['Transistors'])
+
+        message = 'Available ICs:\n'
+        message += '\n'.join(map('/pinout_{0}'.format, ICList))
+        message += '\nAvailable Microcontrollers:\n'
+        message += '\n'.join(map('/pinout_{0}'.format, MicroList))
+        message += '\nAvailable Transistors:\n'
+        message += '\n'.join(map('/pinout_{0}'.format, TransistorsList))
+        bot.sendMessage(chat_id=chat_id, text=message)
+        return
+
+
+def help(chat_id, botCmd):
+    bot.sendMessage(chat_id=chat_id, text='\n'.join(commands.keys()))
+
+
+commands = {
+    '/help' : help,
+    '/AUGCalendar' : AUGCalendar,
+    '/breadboard': print_breadboard,
+    '/pinout': print_pinout
+}
+
+
+def setup():
+    try:
+        LAST_UPDATE_ID = bot.getUpdates()[-1].update_id
+        print LAST_UPDATE_ID
+    except IndexError:
+        LAST_UPDATE_ID = None
+
+
+def parseMessage(update):
+    message = update.message.text
+    chat_id = update.message.chat_id
+    if message.startswith('/'):
+        botCmd = BotCommand(message)
+
+        if botCmd.command in commands:
+            commands[botCmd.command](chat_id, botCmd)
+        else:
+            bot.sendMessage(chat_id=chat_id, text='Invalid command')
+
+    else:
+        print "MESSAGE " + message
+
+
 #--------------------------------#
 #main loop - listens for commands.
 
 if __name__ == '__main__':
+    setup()
+
     while True:
-        echo()
-        time.sleep(3)
+        try:
+            for update in bot.getUpdates(offset=LAST_UPDATE_ID):
+                if LAST_UPDATE_ID < update.update_id:
+                    LAST_UPDATE_ID = update.update_id
+                    chat_id = update.message.chat_id
+                    from_user = update.message.from_user
+                    if update.message.text:
+                        parseMessage(update)
+
+        except:
+            pass
+        time.sleep(0.5)

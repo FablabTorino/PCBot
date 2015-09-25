@@ -6,20 +6,20 @@
 				],
 	"pinout":{
 				"ICs":[
-						{"name":"555","filename":"555.png"},
-						{"name":"L293","filename":"l292.png"},
+						{"name":"555","filename":"555.jpg"},
+						{"name":"L293","filename":"l293.png"},
 						{"name":"TLC5940","filename":"TLC5940.png"},
 						{"name":"ULN2803","filename":"ULN2803.jpg"}
 				],
 				"Microcontrollers":[
 						{"name":"Atmega328","filename":"Atmega328.png"},
-						{"name":"ATtiny45-85","filename":"ATtiny45-85.png"},
+						{"name":"ATtiny45_85","filename":"ATtiny45-85.png"},
 						{"name":"edison","filename":"edison.png"},
 						{"name":"esp826_12e","filename":"esp8266-esp-12e.jpg"},
-						{"name":"esp826","filename":"esp8266.jpg"}
+						{"name":"esp826_standard","filename":"ESP8266.jpg"}
 				],
 				"Transistors":[
-						{"name":"IRF520","filename":"IRF520.png"}
+						{"name":"IRF520","filename":"IRF520.jpg"}
 				]
 	 	}
 }
