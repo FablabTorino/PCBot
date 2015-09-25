@@ -61,7 +61,6 @@ import re
 import random
 
 
-
 def AUGCalendar(chat_id):
     # Compute the dates for each week that overlaps the month
     now = datetime.datetime.now()
@@ -193,6 +192,15 @@ def print_pinout(chat_id, botCmd):
         return
 
 
+def print_url(chat_id, botCmd):
+    imageTypes = ['.jpg', '.png', '.jpeg']
+    if any(x in botCmd.parameter for x in imageTypes):
+        print ("I'm printing an image")
+        printer.printImageByUrl(botCmd.parameter)
+    else:
+        print ("this is not an image")    
+
+
 def help(chat_id, botCmd):
     bot.sendMessage(chat_id=chat_id, text='\n'.join(commands.keys()))
 
@@ -201,7 +209,8 @@ commands = {
     '/help' : help,
     '/AUGCalendar' : AUGCalendar,
     '/breadboard': print_breadboard,
-    '/pinout': print_pinout
+    '/pinout': print_pinout,
+    '/print' : print_url
 }
 
 
