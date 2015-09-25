@@ -1,5 +1,6 @@
 {
 	"breadboard":[
+				   {"name":"logo","filename":"logo.png"},
 				   {"name":"blink","filename":"blink.png"},
 				   {"name":"analogIn","filename":"analogIn.png"},
 				   {"name":"button","filename":"button.png"}

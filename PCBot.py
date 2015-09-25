@@ -143,8 +143,7 @@ def print_breadboard(chat_id, botCmd):
 # print pinouts from the thermal printer
 
 def print_pinout(chat_id, botCmd):
-    #filename='tempData/data.json'
-    filename='data/printable.json'
+    filename='tempData/data.json'
     #urllib.urlretrieve(DataUrl, filename)
 
     with open(filename) as jsonFile :
